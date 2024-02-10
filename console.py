@@ -2,21 +2,31 @@
 """contains the entry point of the command interpreter"""
 import cmd
 from models.base_model import BaseModel
-import models.engine.file_storage
+from models.engine.file_storage import FileStorage
+from models import storage
 
 
 class HBNBCommand(cmd.Cmd):
 
-    prompt = "(hbnb) "
-    
+    prompt = "(hbnb)"
+    name_classes = {type(obj).__name__ for obj in storage.all().values()}
+
     def do_all(self, line):
-        if line == "BaseModel" or line == None:
-            print(eval(line).FileStorage.all())
+        """Prints all instances of a specified class or all known instances if no class is specified."""
+
+        if not line:
+            for obj_id, obj in storage.all().items():
+                print(obj)
+        elif line in self.name_classes: 
+            for obj_id, obj in storage.all().items():
+                    print(obj)
         else:
             print("** class doesn't exist **")
-        
+
     def do_create(self, line):
-        if line == "BaseModel":
+        """Creates a new instance of a specified class with optional attributes, saves it, and prints the id."""
+
+        if line in self.name_classes:
             new_instance = BaseModel()
             new_instance.save()
             print(new_instance.id)
@@ -25,17 +35,54 @@ class HBNBCommand(cmd.Cmd):
         else:
             print("** class doesn't exist **")
 
+    def do_show(self, line):
+        args = line.split()
+
+        if not args:
+            print("** class name missing **")
+        elif args[0] not in self.name_classes:
+            print("** class doesn't exist **")
+        elif len(args) < 2:
+            print("** instance id missing **")
+        else:
+            obj_key = f"{args[0]}.{args[1]}" 
+            if obj_key in storage.all():
+                 print(storage.all()[obj_key])
+            else:
+                print("** no instance found **")
+    
+    def do_destroy(self, line):
+        args = line.split()
+
+        if not args:
+            print("** class name missing **")
+        elif args[0] not in self.name_classes:
+            print("** class doesn't exist **")
+        elif len(args) < 2:
+            print("** instance id missing **")
+        else:
+            obj_key = f"{args[0]}.{args[1]}" 
+            if obj_key in storage.all():
+                del storage.all()[obj_key]
+                storage.save()
+                print("** instance deleted successfully **")
+            else:
+                print("** no instance found **")
     
     def do_EOF(self, line):
         """EOF command to exit the program"""
+
+        print()
         return True
     
     def do_quit(self, line):
         """quit command to exit the program"""
+
         return True
     
     def emptyline(self):
         """an empty line + ENTER should not execute anything"""
+
         pass
 
 if __name__ == '__main__':
