@@ -9,7 +9,7 @@ from base_model import BaseModel
 
 class User(BaseModel):
     """class that inherits from BaseModel"""
-    
+
     email: str = ""
     password: str = ""
     first_name: str = ""

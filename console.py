@@ -12,8 +12,14 @@ class HBNBCommand(cmd.Cmd):
     name_classes = {type(obj).__name__ for obj in storage.all().values()}
 
     def do_all(self, line):
-        """Prints all instances of a specified class or all known instances if no class is specified."""
 
+        """
+        all [class_name]: Prints all instances of a specified class,
+        or all known instances if no class is specified.
+
+        Usage: all or all ClassName
+
+        """
         objects = []
 
         if not line:
@@ -29,10 +35,13 @@ class HBNBCommand(cmd.Cmd):
 
         print(objects)
 
-
     def do_create(self, line):
-        """Creates a new instance of a specified class with optional attributes, saves it, and prints the id."""
-
+        """
+        create [class_name]: Creates a new instance of a specified class,
+        saves it to the file storage, and prints the new instance's id.
+        Currently, it creates instances of BaseModel by default.
+        Usage: create ClassName
+        """
         if line in self.name_classes:
             new_instance = BaseModel()
             new_instance.save()
@@ -43,6 +52,11 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
 
     def do_show(self, line):
+        """
+        show [class_name] [instance_id]: Prints the string
+        representation of an instance based on the class name and id.
+        Usage: show ClassName instance_id
+        """
         args = line.split()
 
         if not args:
@@ -52,13 +66,18 @@ class HBNBCommand(cmd.Cmd):
         elif len(args) < 2:
             print("** instance id missing **")
         else:
-            obj_key = f"{args[0]}.{args[1]}" 
+            obj_key = f"{args[0]}.{args[1]}"
             if obj_key in storage.all():
-                 print(storage.all()[obj_key])
+                print(storage.all()[obj_key])
             else:
                 print("** no instance found **")
-    
+
     def do_destroy(self, line):
+        """
+        destroy [class_name] [instance_id]: Deletes an instance based
+        on the class name and id, and saves the change into the file storage.
+        Usage: destroy ClassName instance_id
+        """
         args = line.split()
 
         if not args:
@@ -68,7 +87,7 @@ class HBNBCommand(cmd.Cmd):
         elif len(args) < 2:
             print("** instance id missing **")
         else:
-            obj_key = f"{args[0]}.{args[1]}" 
+            obj_key = f"{args[0]}.{args[1]}"
             if obj_key in storage.all():
                 del storage.all()[obj_key]
                 storage.save()
@@ -77,6 +96,12 @@ class HBNBCommand(cmd.Cmd):
                 print("** no instance found **")
 
     def do_update(self, line):
+        """
+        update [class_name] [instance_id] [attribute_name] [attribute_value]:
+        Updates an instance by adding or updating an attribute
+        (with the attribute's value) and saves the change to the file storage.
+        Usage: update ClassName instance_id attribute_name attribute_value
+        """
         args = line.split()
 
         if not args:
@@ -104,22 +129,30 @@ class HBNBCommand(cmd.Cmd):
                 setattr(obj, args[2], args[3])
                 storage.save()
 
-
     def do_EOF(self, line):
-        """EOF command to exit the program"""
-
+        """
+        EOF: Also exits the program when receiving the EOF signal (Ctrl+D).
+        Usage: (EOF signal)
+        """
         print()
         return True
-    
+
     def do_quit(self, line):
-        """quit command to exit the program"""
+        """
+        quit: Exits the program.
 
+        Usage: quit
+        """
         return True
-    
-    def emptyline(self):
-        """an empty line + ENTER should not execute anything"""
 
+    def emptyline(self):
+        """
+        Empty line: Entering an empty line followed
+        by ENTER does not execute anything.
+        Usage: (just press ENTER on an empty line)
+        """
         pass
+
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
