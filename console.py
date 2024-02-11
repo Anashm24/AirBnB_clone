@@ -3,20 +3,13 @@
 import cmd
 import ast
 from models.base_model import BaseModel
-<<<<<<< HEAD
 from models import storage
 import ast
-=======
-from models.engine.file_storage import FileStorage
-from models import storage
-
->>>>>>> 5ed7f9613e0312cf833b6d7b40560ad24ee54dd8
 
 class HBNBCommand(cmd.Cmd):
     """Represent the command interpreter"""
 
     prompt = "(hbnb) "
-<<<<<<< HEAD
     
     
 
@@ -140,93 +133,6 @@ class HBNBCommand(cmd.Cmd):
             print(f"Unrecognized command: {line}.\
                   Type 'help' for assistance.\n")
             
-=======
-    name_classes = {type(obj).__name__ for obj in storage.all().values()}
-
-    def do_all(self, line):
-
-        """
-        all [class_name]: Prints all instances of a specified class,
-        or all known instances if no class is specified.
-
-        Usage: all or all ClassName
-
-        """
-        objects = []
-
-        if not line:
-            for obj_id, obj in storage.all().items():
-                objects.append(str(obj))
-        elif line in self.name_classes:
-            for obj_id, obj in storage.all().items():
-                if obj.__class__.__name__ == line:
-                    objects.append(str(obj))
-        else:
-            print("** class doesn't exist **")
-            return
-
-        print(objects)
-
-    def do_create(self, line):
-        """
-        create [class_name]: Creates a new instance of a specified class,
-        saves it to the file storage, and prints the new instance's id.
-        Currently, it creates instances of BaseModel by default.
-        Usage: create ClassName
-        """
-        if line in self.name_classes:
-            new_instance = BaseModel()
-            new_instance.save()
-            print(new_instance.id)
-        elif not line:
-            print("** class name missing **")
-        else:
-            print("** class doesn't exist **")
-
-    def do_show(self, line):
-        """
-        show [class_name] [instance_id]: Prints the string
-        representation of an instance based on the class name and id.
-        Usage: show ClassName instance_id
-        """
-        args = line.split()
-
-        if not args:
-            print("** class name missing **")
-        elif args[0] not in self.name_classes:
-            print("** class doesn't exist **")
-        elif len(args) < 2:
-            print("** instance id missing **")
-        else:
-            obj_key = f"{args[0]}.{args[1]}"
-            if obj_key in storage.all():
-                print(storage.all()[obj_key])
-            else:
-                print("** no instance found **")
-
-    def do_destroy(self, line):
-        """
-        destroy [class_name] [instance_id]: Deletes an instance based
-        on the class name and id, and saves the change into the file storage.
-        Usage: destroy ClassName instance_id
-        """
-        args = line.split()
-
-        if not args:
-            print("** class name missing **")
-        elif args[0] not in self.name_classes:
-            print("** class doesn't exist **")
-        elif len(args) < 2:
-            print("** instance id missing **")
-        else:
-            obj_key = f"{args[0]}.{args[1]}"
-            if obj_key in storage.all():
-                del storage.all()[obj_key]
-                storage.save()
-            else:
-                print("** no instance found **")
-
->>>>>>> 5ed7f9613e0312cf833b6d7b40560ad24ee54dd8
     def do_update(self, line):
         """
         update [class_name] [instance_id] [attribute_name] [attribute_value]:
@@ -239,11 +145,7 @@ class HBNBCommand(cmd.Cmd):
         if not args:
             print("** class name missing **")
             return
-<<<<<<< HEAD
         elif args[0] not in storage.CLASSES:
-=======
-        elif args[0] not in self.name_classes:
->>>>>>> 5ed7f9613e0312cf833b6d7b40560ad24ee54dd8
             print("** class doesn't exist **")
             return
         elif len(args) < 2:
@@ -269,19 +171,12 @@ class HBNBCommand(cmd.Cmd):
                 setattr(obj, key_att, val_att)
                 storage.save()
 
-<<<<<<< HEAD
 
     def do_EOF(self, line):
         """EOF command to exit the program"""
-=======
-    def do_EOF(self, line):
-        """
-        EOF: Also exits the program when receiving the EOF signal (Ctrl+D).
-        Usage: (EOF signal)
-        """
->>>>>>> 5ed7f9613e0312cf833b6d7b40560ad24ee54dd8
         print()
         return True
+
 
     def do_quit(self, line):
         """
@@ -290,6 +185,7 @@ class HBNBCommand(cmd.Cmd):
         Usage: quit
         """
         return True
+
 
     def emptyline(self):
         """
