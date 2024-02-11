@@ -86,48 +86,55 @@ class HBNBCommand(cmd.Cmd):
             print(["{}".format(str(obj)) for key, obj in storage.all().items()
                    if key.startswith(class_name)])
 
-    def handle_custom_commands(self, class_name, action):
+    def handle_custom_commands(self, class_name, command):
         """Handle custom commands like <class name>.all()
         or <class name>.count()."""
-        parts = action.split("(")
+        parts = command.split("(")
         if len(parts) == 2 and parts[1].endswith(')'):
-            action_name = parts[0]
+            method_name = parts[0]
             action_args = parts[1][:-1].split(',')
 
             # Remove surrounding quotes if present
             action_args = [arg.strip('\"') for arg in action_args]
 
-            if action_name == 'show':
+            if method_name == 'show':
                 key = f"{class_name}.{action_args[0]}"
                 if key in storage.all():
                     print(storage.all()[key])
                 else:
                     print(f"** no instance found **")
-            elif action_name == 'all':
+            elif method_name == 'all':
                 instances = [
                     str(obj) for key, obj in storage.all().items()
                     if key.startswith(class_name + '.')
                 ]
                 print(instances)
-            elif action_name == 'count':
+            elif method_name == 'destroy':
+                key = "{}.{}".format(class_name, action_args[0])
+                if key in storage.all():
+                    del storage.all()[key]
+                    storage.save()
+                else:
+                    print(f"** no instance found **")
+            elif method_name == 'count':
                 count = sum(
                     1 for key in storage.all()
                     if key.startswith(class_name + '.')
                 )
                 print(count)
             else:
-                print(f"Unrecognized action: {action_name}.\
+                print(f"Unrecognized command: {method_name}.\
                 Type 'help' for assistance.\n")
         else:
-            print(f"Unrecognized action: {action}.\
+            print(f"Unrecognized command: {command}.\
             Type 'help' for assistance.\n")
 
     def default(self, line):
         """Handle unrecognized commands."""
         parts = line.split('.')
         if len(parts) == 2:
-            class_name, action = parts
-            self.handle_custom_commands(class_name, action)
+            class_name, command = parts
+            self.handle_custom_commands(class_name, command)
         else:
             print(f"Unrecognized command: {line}.\
                   Type 'help' for assistance.\n")
