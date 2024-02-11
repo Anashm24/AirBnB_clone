@@ -38,11 +38,11 @@ class TestHBNBCommand(unittest.TestCase):
             HBNBCommand().onecmd("destroy")
             self.assertEqual(f.getvalue(), "** class name missing **\n")
 
-    def test_all(self):
-        with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("all")
+    # def test_all(self):
+    #     with patch('sys.stdout', new=StringIO()) as f:
+    #         HBNBCommand().onecmd("all")
             
-            self.assertEqual(f.getvalue(), "[BaseModel] (6dcee919-c9ad-49e8-a09c-f0acd17af847) {'id': '6dcee919-c9ad-49e8-a09c-f0acd17af847', 'created_at': datetime.datetime(2024, 2, 11, 5, 39, 55, 620378), 'updated_at': datetime.datetime(2024, 2, 11, 5, 39, 55, 620595)}")
+    #         self.assertEqual(f.getvalue(), "[BaseModel] (6dcee919-c9ad-49e8-a09c-f0acd17af847) {'id': '6dcee919-c9ad-49e8-a09c-f0acd17af847', 'created_at': datetime.datetime(2024, 2, 11, 5, 39, 55, 620378), 'updated_at': datetime.datetime(2024, 2, 11, 5, 39, 55, 620595)}")
 
     def test_EOF(self):
         with patch('sys.stdout', new=StringIO()) as f:

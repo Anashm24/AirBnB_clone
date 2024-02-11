@@ -6,12 +6,11 @@ from models.base_model import BaseModel
 from models import storage
 import ast
 
+
 class HBNBCommand(cmd.Cmd):
     """Represent the command interpreter"""
 
     prompt = "(hbnb) "
-    
-    
 
     def do_create(self, line):
         """ Creates a new instance of BaseModel,
@@ -84,9 +83,9 @@ class HBNBCommand(cmd.Cmd):
             print(["{}".format(str(obj)) for obj in storage.all().values()])
         else:
             class_name = args[0]
-            print(["{}".format(str(obj)) for key, obj in storage.all().items() if key.startswith(class_name)])
-            
-    
+            print(["{}".format(str(obj)) for key, obj in storage.all().items()
+                   if key.startswith(class_name)])
+
     def handle_custom_commands(self, class_name, action):
         """Handle custom commands like <class name>.all()
         or <class name>.count()."""
@@ -132,7 +131,7 @@ class HBNBCommand(cmd.Cmd):
         else:
             print(f"Unrecognized command: {line}.\
                   Type 'help' for assistance.\n")
-            
+
     def do_update(self, line):
         """
         update [class_name] [instance_id] [attribute_name] [attribute_value]:
@@ -171,12 +170,10 @@ class HBNBCommand(cmd.Cmd):
                 setattr(obj, key_att, val_att)
                 storage.save()
 
-
     def do_EOF(self, line):
         """EOF command to exit the program"""
         print()
         return True
-
 
     def do_quit(self, line):
         """
@@ -185,7 +182,6 @@ class HBNBCommand(cmd.Cmd):
         Usage: quit
         """
         return True
-
 
     def emptyline(self):
         """
