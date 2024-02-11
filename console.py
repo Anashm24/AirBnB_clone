@@ -5,12 +5,16 @@ import ast
 from models.base_model import BaseModel
 from models.engine.file_storage import FileStorage
 from models import storage
+from models.user import User
 
 
 class HBNBCommand(cmd.Cmd):
 
     prompt = "(hbnb) "
-    name_classes = {type(obj).__name__ for obj in storage.all().values()}
+    name_classes = {
+        "BaseModel": BaseModel,
+        "User": User,
+        }
 
     def do_all(self, line):
 
@@ -21,36 +25,36 @@ class HBNBCommand(cmd.Cmd):
         Usage: all or all ClassName
 
         """
-        objects = []
+        
 
         if not line:
             for obj_id, obj in storage.all().items():
-                objects.append(str(obj))
+                print(str(obj))
         elif line in self.name_classes:
             for obj_id, obj in storage.all().items():
                 if obj.__class__.__name__ == line:
-                    objects.append(str(obj))
+                    print(str(obj))
         else:
             print("** class doesn't exist **")
-            return
-
-        print(objects)
 
     def do_create(self, line):
-        """
-        create [class_name]: Creates a new instance of a specified class,
-        saves it to the file storage, and prints the new instance's id.
-        Currently, it creates instances of BaseModel by default.
-        Usage: create ClassName
-        """
-        if line in self.name_classes:
-            new_instance = BaseModel()
-            new_instance.save()
-            print(new_instance.id)
-        elif not line:
+        """Creates a new instance of a specified class."""
+
+        args = line.split()
+        if not args:
             print("** class name missing **")
+            return
+
+        class_name = args[0]
+        if class_name in self.name_classes:
+            cls = self.name_classes[class_name]
+            new_instance = cls()
+            new_instance.save() 
+            print(new_instance.id)
         else:
             print("** class doesn't exist **")
+
+
 
     def do_show(self, line):
         """
