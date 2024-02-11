@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """contains the entry point of the command interpreter"""
 import cmd
+import ast
 from models.base_model import BaseModel
 from models import storage
 import ast
@@ -176,12 +177,22 @@ class HBNBCommand(cmd.Cmd):
         print()
         return True
 
+
     def do_quit(self, line):
-        """quit command to exit the program"""
+        """
+        quit: Exits the program.
+
+        Usage: quit
+        """
         return True
 
+
     def emptyline(self):
-        """an empty line + ENTER should not execute anything"""
+        """
+        Empty line: Entering an empty line followed
+        by ENTER does not execute anything.
+        Usage: (just press ENTER on an empty line)
+        """
         pass
 
 
