@@ -14,14 +14,21 @@ class HBNBCommand(cmd.Cmd):
     def do_all(self, line):
         """Prints all instances of a specified class or all known instances if no class is specified."""
 
+        objects = []
+
         if not line:
             for obj_id, obj in storage.all().items():
-                print(obj)
-        elif line in self.name_classes: 
+                objects.append(str(obj))
+        elif line in self.name_classes:
             for obj_id, obj in storage.all().items():
-                    print(obj)
+                if obj.__class__.__name__ == line:
+                    objects.append(str(obj))
         else:
             print("** class doesn't exist **")
+            return
+
+        print(objects)
+
 
     def do_create(self, line):
         """Creates a new instance of a specified class with optional attributes, saves it, and prints the id."""
@@ -68,7 +75,36 @@ class HBNBCommand(cmd.Cmd):
                 print("** instance deleted successfully **")
             else:
                 print("** no instance found **")
-    
+
+    def do_update(self, line):
+        args = line.split()
+
+        if not args:
+            print("** class name missing **")
+            return
+        elif args[0] not in self.name_classes:
+            print("** class doesn't exist **")
+            return
+        elif len(args) < 2:
+            print("** instance id missing **")
+            return
+        elif len(args) < 3:
+            print("** attribute name missing **")
+            return
+        elif len(args) < 4:
+            print("** value missing **")
+            return
+        else:
+            obj_key = f"{args[0]}.{args[1]}"
+            if obj_key not in storage.all():
+                print("** no instance found **")
+                return
+            else:
+                obj = storage.all()[obj_key]
+                setattr(obj, args[2], args[3])
+                storage.save()
+
+
     def do_EOF(self, line):
         """EOF command to exit the program"""
 
