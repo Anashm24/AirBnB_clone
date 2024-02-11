@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """contains the entry point of the command interpreter"""
 import cmd
+import ast
 from models.base_model import BaseModel
 from models.engine.file_storage import FileStorage
 from models import storage
@@ -8,7 +9,7 @@ from models import storage
 
 class HBNBCommand(cmd.Cmd):
 
-    prompt = "(hbnb)"
+    prompt = "(hbnb) "
     name_classes = {type(obj).__name__ for obj in storage.all().values()}
 
     def do_all(self, line):
@@ -91,7 +92,6 @@ class HBNBCommand(cmd.Cmd):
             if obj_key in storage.all():
                 del storage.all()[obj_key]
                 storage.save()
-                print("** instance deleted successfully **")
             else:
                 print("** no instance found **")
 
@@ -126,7 +126,11 @@ class HBNBCommand(cmd.Cmd):
                 return
             else:
                 obj = storage.all()[obj_key]
-                setattr(obj, args[2], args[3])
+                key_att = args[2]
+                val_att = args[3]
+
+                val_att = ast.literal_eval(val_att)
+                setattr(obj, key_att, val_att)
                 storage.save()
 
     def do_EOF(self, line):
